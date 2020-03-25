@@ -35,24 +35,23 @@ export default function Form() {
         .then(valid => {
             setButtonDisabled(!valid)
         })
-    }
-    , [formState])
+    }, [formState])
 
 
     const validateChange = event => {
         yup
         .reach(formSchema, event.target.name)
-        .validate(event.target.name)
+        .validate(event.target.value)
         .then(valid => {
             setErrors({
                 ...errors,
                 [event.target.name]: ""
             })
         })
-        .catch( error => {
+        .catch( err => {
             setErrors({
                 ...errors,
-                [event.target.name]: error.errors
+                [event.target.name]: err.errors
             })
         })
     }
@@ -71,15 +70,16 @@ export default function Form() {
                 terms: ""     
             })
         })
-        .catch(error => {
-            console.log(error.res)
+        .catch(err => {
+            console.log(err.res)
         })
     }
 
     const inputChange = event => {
         event.persist()
         const newFormData = {
-            ...formState, [event.target.name]:
+            ...formState,
+            [event.target.name]:
             event.target.type === "checkbox" ? event.target.checked : event.target.value
         }
         validateChange(event)
@@ -96,6 +96,7 @@ export default function Form() {
                 value={formState.name}
                 onChange={inputChange}
                 />
+                {errors.name.length > 0 ? <p className="error">{errors.name}</p> : null}
             </label >
             <br/>
             <label htmlFor='email'> Email
@@ -106,6 +107,7 @@ export default function Form() {
                 value={formState.email}
                 onChange={inputChange}
                 />
+                {errors.email.length > 0 ? <p className="error">{errors.email}</p> : null}
             </label>
             <br/>
             <label htmlFor='password'> Password
@@ -116,6 +118,7 @@ export default function Form() {
                 value={formState.password}
                 onChange={inputChange}
                 />
+                {errors.password.length > 0 ? <p className="error">{errors.password}</p> : null}
             </label>
             <br/>
             <label htmlFor='Terms'>
